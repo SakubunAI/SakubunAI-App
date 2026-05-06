@@ -362,7 +362,7 @@
         // =========================================================================
         const apiKey = "AIzaSyDAPFD_Yjpvxy0WaA-DTiCRyPCphnFZ4Qo"; 
         // HANYA model ini yang didukung di lingkungan preview Canvas. Model lain akan 404.
-       const modelName = "gemini-1.5-flash";
+       const modelName = "gemini-1.5-flash-latest";
         // =========================================================================
 
         const accounts = [
@@ -587,7 +587,7 @@ Gabungan properti "text" dari segments HARUS 100% sama persis dengan input asli.
                 }
             };
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+            const url = [https://generativelanguage.googleapis.com/v1/models/$](https://generativelanguage.googleapis.com/v1/models/$){modelName}:generateContent?key=${apiKey};
 
             try {
                 const response = await fetchWithRetry(url, {
