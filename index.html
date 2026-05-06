@@ -2,841 +2,137 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Koreksi Sakubun AI - Terpadu Final</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koreksi Sakubun AI - Full Features</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;600&display=swap');
-
-        :root {
-            --bg-base: #f8f6f0;
-            --bg-panel: #ffffff;
-            --bg-panel-hover: #f0ede5;
-            --text-main: #2c2a28;
-            --text-muted: #73706a;
-            --border-color: rgba(0, 0, 0, 0.08);
-            --accent-gold: #c8923a;
-            --accent-gold-light: rgba(200, 146, 58, 0.15);
-            
-            --err-g-bg: #e6f0ff; --err-g-text: #0055cc; --err-g-border: #99c2ff; 
-            --err-k-bg: #e6ffe6; --err-k-text: #008000; --err-k-border: #99ff99; 
-            --err-v-bg: #fff0e6; --err-v-text: #d96600; --err-v-border: #ffcc99; 
-            --err-p-bg: #ffe6e6; --err-p-text: #cc0000; --err-p-border: #ff9999; 
-            
-            --nav-bg: rgba(255, 255, 255, 0.9);
-            --shadow: 0 4px 20px rgba(0,0,0,0.05);
-            --modal-bg: rgba(0,0,0,0.4);
-        }
-
-        [data-theme="dark"] {
-            --bg-base: #0f0e0c;
-            --bg-panel: #1a1917;
-            --bg-panel-hover: #262421;
-            --text-main: rgba(240, 232, 216, 0.95);
-            --text-muted: rgba(240, 232, 216, 0.5);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --accent-gold: #e8b86d;
-            --accent-gold-light: rgba(200, 146, 58, 0.2);
-
-            --err-g-bg: rgba(0, 85, 204, 0.15); --err-g-text: #66a3ff; --err-g-border: rgba(0, 85, 204, 0.3);
-            --err-k-bg: rgba(0, 128, 0, 0.15);  --err-k-text: #4dff4d; --err-k-border: rgba(0, 128, 0, 0.3);
-            --err-v-bg: rgba(217, 102, 0, 0.15);--err-v-text: #ff9940; --err-v-border: rgba(217, 102, 0, 0.3);
-            --err-p-bg: rgba(204, 0, 0, 0.15);  --err-p-text: #ff6666; --err-p-border: rgba(204, 0, 0, 0.3);
-
-            --nav-bg: rgba(20, 19, 17, 0.9);
-            --shadow: 0 -4px 20px rgba(0,0,0,0.3);
-            --modal-bg: rgba(0,0,0,0.7);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
-        
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            font-family: 'Noto Sans JP', sans-serif;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;500&display=swap');
+        :root { --bg: #f8f6f0; --panel: #ffffff; --text: #2c2a28; --accent: #c8923a; --border: rgba(0,0,0,0.1); }
+        [data-theme="dark"] { --bg: #0f0e0c; --panel: #1a1917; --text: #f0e8d8; --border: rgba(255,255,255,0.1); }
+        body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', sans-serif; transition: 0.3s; }
         .jp-serif { font-family: 'Noto Serif JP', serif; }
-
-        .bg-glow { position: fixed; inset: 0; pointer-events: none; z-index: -1; overflow: hidden; }
-        .bg-glow::before { content: ''; position: absolute; width: 300px; height: 300px; border-radius: 50%; background: var(--accent-gold-light); top: -100px; right: -50px; filter: blur(60px); }
-        .bg-glow::after { content: ''; position: absolute; width: 250px; height: 250px; border-radius: 50%; background: rgba(80, 60, 180, 0.05); bottom: 100px; left: -50px; filter: blur(60px); }
-
-        .panel { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; }
-        .input-area { background: var(--bg-base); border: 1px solid var(--border-color); color: var(--text-main); }
-        .input-area:focus { outline: none; border-color: var(--accent-gold); }
-        
-        .btn-primary { background: var(--accent-gold); color: #000; font-weight: 600; border-radius: 12px; }
+        .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; }
+        .btn-primary { background: var(--accent); color: #000; font-weight: 600; border-radius: 12px; transition: 0.2s; }
         .btn-primary:active { transform: scale(0.98); }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .sakubun-text { line-height: 2.2; font-size: 1.1rem; letter-spacing: 0.02em; word-break: break-all; }
-        .err-span { 
-            position: relative; display: inline-block; padding: 0 3px; border-radius: 4px; 
-            cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;
-        }
-        .err-span.active { transform: scale(1.05); z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        
-        .err-span.et-grammar { background: var(--err-g-bg); border-bottom-color: var(--err-g-border); color: var(--err-g-text); }
-        .err-span.et-kanji { background: var(--err-k-bg); border-bottom-color: var(--err-k-border); color: var(--err-k-text); }
-        .err-span.et-vocab { background: var(--err-v-bg); border-bottom-color: var(--err-v-border); color: var(--err-v-text); }
-        .err-span.et-punct { background: var(--err-p-bg); border-bottom-color: var(--err-p-border); color: var(--err-p-text); }
-
-        .err-list-item { 
-            background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px;
-            padding: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; display: flex; gap: 12px;
-        }
-        .err-list-item:hover { border-color: var(--accent-gold); }
-        .err-list-item.active { border-color: var(--accent-gold); background: var(--accent-gold-light); }
-        
-        .err-badge { padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-        .badge-grammar { background: var(--err-g-bg); color: var(--err-g-text); border: 1px solid var(--err-g-border); }
-        .badge-kanji { background: var(--err-k-bg); color: var(--err-k-text); border: 1px solid var(--err-k-border); }
-        .badge-vocab { background: var(--err-v-bg); color: var(--err-v-text); border: 1px solid var(--err-v-border); }
-        .badge-punct { background: var(--err-p-bg); color: var(--err-p-text); border: 1px solid var(--err-p-border); }
-
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0; background: var(--nav-bg);
-            backdrop-filter: blur(10px); border-top: 1px solid var(--border-color);
-            display: flex; justify-content: space-around; padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
-            z-index: 40; box-shadow: var(--shadow);
-        }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 0.7rem; cursor: pointer; width: 25%; }
-        .nav-item.active { color: var(--accent-gold); }
-        .nav-icon { font-size: 1.5rem; }
-
-        .screen { display: none; padding-bottom: 90px; min-height: 100vh; }
-        .screen.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .loader-overlay {
-            position: fixed; inset: 0; background: var(--modal-bg); backdrop-filter: blur(5px);
-            display: none; justify-content: center; align-items: center; z-index: 100; flex-direction: column;
-        }
-        .spinner {
-            width: 50px; height: 50px; border: 4px solid var(--border-color);
-            border-top-color: var(--accent-gold); border-radius: 50%; animation: spin 1s linear infinite;
-        }
+        .err-grammar { border-bottom: 2px solid #0055cc; background: rgba(0,85,204,0.1); }
+        .loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        .modal-overlay {
-            position: fixed; inset: 0; background: var(--modal-bg); backdrop-filter: blur(3px);
-            display: none; justify-content: center; align-items: flex-end; z-index: 100;
-        }
-        .modal-overlay.active { display: flex; animation: fadeInModal 0.2s ease; }
-        .modal-content {
-            background: var(--bg-base); width: 100%; max-width: 450px; border-radius: 20px 20px 0 0;
-            padding: 24px; border-top: 1px solid var(--border-color);
-            transform: translateY(100%); animation: slideUp 0.3s forwards ease-out;
-        }
-        @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { to { transform: translateY(0); } }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
-
-        #image-preview-container { display: none; position: relative; width: 100%; border-radius: 12px; overflow: hidden; margin-top: 12px; }
-        #image-preview { width: 100%; height: 120px; object-fit: cover; }
-        .remove-img-btn { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; border-radius: 50%; padding: 4px; cursor: pointer; }
-        
-        #api-error-alert { display: none; background: #ffe6e6; border: 1px solid #ff9999; color: #cc0000; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem; }
-        [data-theme="dark"] #api-error-alert { background: rgba(204, 0, 0, 0.15); border-color: rgba(204, 0, 0, 0.3); color: #ff6666; }
     </style>
 </head>
 <body data-theme="dark">
 
-    <div class="bg-glow"></div>
-
-    <header class="sticky top-0 z-30 bg-[var(--bg-base)]/80 backdrop-blur-md border-b border-[var(--border-color)] px-5 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-2" id="header-title-container">
-            <i class="ph ph-pen-nib text-[var(--accent-gold)] text-2xl"></i>
-            <h1 class="font-bold text-lg tracking-wide"><span data-i18n="appTitle1">Koreksi</span> <span class="text-[var(--accent-gold)]" data-i18n="appTitle2">Sakubun</span></h1>
+    <header class="p-5 flex justify-between items-center border-b border-[var(--border)] sticky top-0 bg-[var(--bg)]/80 backdrop-blur-md z-40">
+        <div class="flex items-center gap-2">
+            <i class="ph ph-pen-nib text-[var(--accent)] text-2xl"></i>
+            <h1 class="font-bold text-lg">Sakubun<span class="text-[var(--accent)]">AI</span></h1>
         </div>
-        <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-[var(--bg-panel)] transition text-[var(--text-main)]">
-            <i class="ph ph-moon text-xl" id="theme-icon"></i>
+        <button onclick="toggleTheme()" class="p-2 bg-[var(--panel)] rounded-full border border-[var(--border)]">
+            <i id="theme-icon" class="ph ph-moon"></i>
         </button>
     </header>
 
-    <main id="app-container" class="max-w-md mx-auto w-full relative">
-
-        <section id="screen-home" class="screen active px-5 pt-6">
+    <main class="max-w-md mx-auto p-5 pb-24">
+        <!-- Input Screen -->
+        <div id="home-screen">
             <div class="mb-6">
-                <h2 class="text-2xl font-bold mb-2" data-i18n="startPractice">Mulai Latihan!</h2>
-                <p class="text-[var(--text-muted)] text-sm" data-i18n="uploadDesc">Ketik atau unggah tulisan bahasa Jepang Anda. AI akan mengoreksi grammar, kanji, kosakata, dan tanda baca dengan teliti.</p>
+                <h2 class="text-xl font-bold mb-1">Koreksi Teks Jepang</h2>
+                <p class="text-sm opacity-60">Masukkan kalimat Anda di bawah ini.</p>
             </div>
-
-            <div id="api-error-alert">
-                <strong><i class="ph ph-warning-circle"></i> Sistem Gagal:</strong> <span id="api-error-text"></span>
-            </div>
-
-            <div class="panel p-5 mb-5 text-center cursor-pointer hover:border-[var(--accent-gold)] transition relative" onclick="document.getElementById('file-input').click()">
-                <i class="ph ph-camera text-4xl text-[var(--accent-gold)] mb-3"></i>
-                <h3 class="font-semibold mb-1" data-i18n="scanBtn">Scan / Unggah Foto</h3>
-                <p class="text-[var(--text-muted)] text-xs" data-i18n="formatDesc">Format JPG, PNG (Maks 5MB)</p>
-                <input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleImageSelect(event)">
-                
-                <div id="image-preview-container" onclick="event.stopPropagation()">
-                    <img id="image-preview" src="" alt="Preview">
-                    <div class="remove-img-btn" onclick="removeImage()">
-                        <i class="ph ph-x"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="relative mb-6">
-                <textarea id="text-input" rows="5" class="input-area w-full rounded-xl p-4 jp-serif text-lg resize-none placeholder-[var(--text-muted)]" placeholder="Ketik sakubun Anda di sini... (Contoh: 私わ昨日学向へ行きました。友達と昼ご飯を食ました)"></textarea>
-                <div class="absolute bottom-3 right-4 text-xs text-[var(--text-muted)]" id="char-count">0/1000</div>
-            </div>
-
-            <button id="btn-koreksi" onclick="processCorrection()" class="btn-primary w-full py-4 text-lg flex justify-center items-center gap-2">
-                <i class="ph ph-magic-wand"></i> <span data-i18n="correctBtn">Koreksi Sekarang</span>
+            
+            <textarea id="input-text" class="w-full panel p-4 h-64 focus:ring-1 ring-[var(--accent)] outline-none jp-serif text-lg mb-4" placeholder="例文：私わ日本語を勉強します。"></textarea>
+            
+            <button onclick="runKoreksi()" class="btn-primary w-full py-4 flex justify-center items-center gap-2">
+                <i class="ph ph-sparkle"></i> Mulai Analisis
             </button>
-        </section>
+        </div>
 
-
-        <section id="screen-detail" class="screen px-5 pt-4">
-            <div class="flex items-center gap-3 mb-6">
-                <button onclick="switchScreen('home')" class="p-2 rounded-full bg-[var(--bg-panel)] border border-[var(--border-color)]">
-                    <i class="ph ph-arrow-left"></i>
-                </button>
-                <h2 class="font-semibold text-lg" data-i18n="resultTitle">Hasil Koreksi</h2>
+        <!-- Result Screen (Hidden by default) -->
+        <div id="result-screen" class="hidden">
+            <button onclick="showHome()" class="mb-4 text-sm opacity-60 flex items-center gap-1">
+                <i class="ph ph-arrow-left"></i> Kembali
+            </button>
+            
+            <div class="panel p-5 mb-4">
+                <h3 class="text-xs font-bold opacity-50 uppercase mb-3 tracking-widest">Hasil Perbaikan</h3>
+                <div id="text-output" class="jp-serif text-xl leading-relaxed text-[var(--accent)]"></div>
             </div>
 
-            <div class="panel p-5 mb-6 flex items-center gap-5">
-                <div class="relative w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-full border-4 border-[var(--accent-gold-light)]">
-                    <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                        <path id="score-circle" class="text-[var(--accent-gold)] stroke-current" stroke-width="3" stroke-dasharray="100, 100" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                    </svg>
-                    <div class="text-xl font-bold font-serif text-[var(--accent-gold)]" id="detail-score">0</div>
-                </div>
-                <div>
-                    <h3 class="font-bold mb-1 text-lg" data-i18n="summary">Ringkasan</h3>
-                    <p class="text-sm text-[var(--text-muted)] leading-relaxed" id="detail-summary">Memuat analisis...</p>
-                </div>
+            <div id="explanation-box" class="space-y-3">
+                <!-- Penjelasan otomatis muncul disini -->
             </div>
-
-            <div class="flex bg-[var(--bg-panel)] p-1 rounded-lg mb-4 border border-[var(--border-color)]">
-                <button id="tab-orig" class="flex-1 py-2 text-sm font-semibold rounded-md bg-[var(--bg-base)] shadow-sm" onclick="toggleTextView('orig')" data-i18n="origText">Teks Asli (Error)</button>
-                <button id="tab-corr" class="flex-1 py-2 text-sm font-semibold rounded-md text-[var(--text-muted)]" onclick="toggleTextView('corr')" data-i18n="corrText">Hasil Perbaikan</button>
-            </div>
-
-            <div class="panel p-5 mb-6 min-h-[150px]">
-                <div id="text-display-orig" class="sakubun-text jp-serif"></div>
-                <div id="text-display-corr" class="sakubun-text jp-serif hidden text-[var(--accent-gold)]"></div>
-            </div>
-
-            <div>
-                <div class="flex justify-between items-end mb-4">
-                    <h3 class="font-bold text-lg" data-i18n="errDetail">Detail Kesalahan</h3>
-                    <span class="text-xs text-[var(--text-muted)] bg-[var(--bg-panel)] px-2 py-1 rounded border border-[var(--border-color)]" id="error-count-badge">0 Ditemukan</span>
-                </div>
-                <div id="no-error-msg" class="hidden text-center py-8 text-[var(--text-muted)]">
-                    <i class="ph ph-check-circle text-4xl text-green-500 mb-2"></i>
-                    <p data-i18n="noError">Hebat! Tidak ada kesalahan yang ditemukan.</p>
-                </div>
-                <div id="errors-container" class="pb-10"></div>
-            </div>
-        </section>
-
-        <section id="screen-history" class="screen px-5 pt-6">
-            <h2 class="text-2xl font-bold mb-6" data-i18n="historyTab">Riwayat</h2>
-            <div id="history-container" class="space-y-4"></div>
-            <div id="empty-history" class="text-center py-20 text-[var(--text-muted)] hidden">
-                <i class="ph ph-folder-open text-5xl mb-3 opacity-50"></i>
-                <p data-i18n="noHistory">Belum ada riwayat koreksi.</p>
-            </div>
-        </section>
-
-        <section id="screen-progress" class="screen px-5 pt-6">
-            <h2 class="text-2xl font-bold mb-6" data-i18n="progressTab">Progres</h2>
-            <div class="panel p-5 mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <div class="text-[var(--text-muted)] text-sm" data-i18n="avgScore">Skor Rata-rata</div>
-                        <div class="text-3xl font-bold text-[var(--accent-gold)]" id="prog-avg-score">0.0</div>
-                    </div>
-                </div>
-                <div class="flex items-end justify-between h-32 gap-2 mt-4 pt-4 border-t border-[var(--border-color)]">
-                    <div class="w-full bg-[var(--accent-gold-light)] rounded-t-sm relative h-[60%]"></div>
-                    <div class="w-full bg-[var(--accent-gold-light)] rounded-t-sm relative h-[40%]"></div>
-                    <div class="w-full bg-[var(--accent-gold-light)] rounded-t-sm relative h-[70%]"></div>
-                    <div class="w-full bg-[var(--accent-gold-light)] rounded-t-sm relative h-[50%]"></div>
-                    <div class="w-full bg-[var(--accent-gold)] rounded-t-sm relative h-[85%] shadow-[0_0_10px_var(--accent-gold-light)]"></div>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="panel p-4 text-center">
-                    <i class="ph ph-files text-2xl text-[var(--accent-gold)] mb-2"></i>
-                    <div class="text-2xl font-bold" id="prog-total">0</div>
-                    <div class="text-xs text-[var(--text-muted)]" data-i18n="totalSakubun">Total Sakubun</div>
-                </div>
-                <div class="panel p-4 text-center">
-                    <i class="ph ph-fire text-2xl text-orange-500 mb-2"></i>
-                    <div class="text-2xl font-bold">3</div>
-                    <div class="text-xs text-[var(--text-muted)]" data-i18n="streak">Hari Beruntun</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="screen-profile" class="screen px-5 pt-6">
-            <h2 class="text-2xl font-bold mb-6" data-i18n="profileTab">Profil</h2>
-            <div class="panel p-5 flex items-center justify-between gap-4 mb-6 relative">
-                <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 rounded-full bg-[var(--accent-gold-light)] border-2 border-[var(--accent-gold)] flex items-center justify-center text-2xl text-[var(--accent-gold)]">
-                        <i id="curr-account-avatar" class="ph ph-user"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-lg" id="curr-account-name">Pelajar Bahasa</h3>
-                        <p class="text-[var(--text-muted)] text-sm" id="curr-account-level">JLPT N4 Level</p>
-                    </div>
-                </div>
-                <button onclick="openAccountModal()" class="text-[var(--accent-gold)] text-sm flex items-center gap-1 bg-[var(--bg-base)] px-3 py-1 rounded-full border border-[var(--accent-gold-light)] hover:bg-[var(--accent-gold-light)]">
-                    <i class="ph ph-arrows-left-right"></i> <span data-i18n="switchAccount">Ganti</span>
-                </button>
-            </div>
-            <div class="panel overflow-hidden">
-                <div class="p-4 border-b border-[var(--border-color)] flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <i class="ph ph-moon text-xl text-[var(--text-muted)]"></i><span data-i18n="darkMode">Mode Gelap</span>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="theme-toggle-switch" class="sr-only peer" checked onchange="toggleTheme()">
-                        <div class="w-11 h-6 bg-[var(--bg-base)] border border-[var(--border-color)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--text-muted)] peer-checked:after:bg-[var(--accent-gold)] after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--accent-gold-light)]"></div>
-                    </label>
-                </div>
-                <div class="p-4 border-b border-[var(--border-color)] flex justify-between items-center cursor-pointer hover:bg-[var(--bg-panel-hover)]" onclick="document.getElementById('lang-select').click()">
-                    <div class="flex items-center gap-3">
-                        <i class="ph ph-globe text-xl text-[var(--text-muted)]"></i><span data-i18n="uiLang">Bahasa UI</span>
-                    </div>
-                    <div class="flex items-center">
-                        <select id="lang-select" class="bg-transparent text-sm text-[var(--text-muted)] outline-none cursor-pointer text-right appearance-none" onchange="changeLanguage(this.value)">
-                            <option value="id">Indonesia</option><option value="en">English</option>
-                            <option value="ja">日本語 (Japanese)</option><option value="zh">中文 (Chinese)</option><option value="ko">한국어 (Korean)</option>
-                        </select>
-                        <i class="ph ph-caret-down text-[var(--text-muted)] ml-1 text-xs"></i>
-                    </div>
-                </div>
-                <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-[var(--bg-panel-hover)] text-red-500" onclick="clearHistory()">
-                    <div class="flex items-center gap-3"><i class="ph ph-trash text-xl"></i><span data-i18n="clearHistory">Hapus Semua Riwayat</span></div>
-                </div>
-            </div>
-            <div class="text-center mt-8 text-xs text-[var(--text-muted)]">Koreksi Sakubun AI v18.0 (Stable & Exact)<br>Powered by Gemini API</div>
-        </section>
-
+        </div>
     </main>
 
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchScreen('home', this)"><i class="ph ph-house nav-icon"></i><span data-i18n="homeTab">Beranda</span></div>
-        <div class="nav-item" onclick="switchScreen('history', this)"><i class="ph ph-clock-counter-clockwise nav-icon"></i><span data-i18n="historyTab">Riwayat</span></div>
-        <div class="nav-item" onclick="switchScreen('progress', this)"><i class="ph ph-chart-line-up nav-icon"></i><span data-i18n="progressTab">Progres</span></div>
-        <div class="nav-item" onclick="switchScreen('profile', this)"><i class="ph ph-user nav-icon"></i><span data-i18n="profileTab">Profil</span></div>
-    </nav>
-
-    <div id="loader" class="loader-overlay">
-        <div class="spinner mb-4"></div>
-        <h3 class="text-[var(--text-main)] font-bold text-lg mb-1 bg-[var(--bg-panel)] px-4 py-2 rounded-lg" data-i18n="analyzing">AI Sedang Menganalisis...</h3>
-    </div>
-
-    <div id="account-modal" class="modal-overlay" onclick="closeAccountModal(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-5">
-                <h3 class="font-bold text-xl" data-i18n="switchAccountTitle">Pilih Akun</h3>
-                <i class="ph ph-x text-xl cursor-pointer" onclick="closeAccountModal(true)"></i>
-            </div>
-            <div id="account-list" class="space-y-3 mb-4"></div>
-            <button class="w-full py-3 rounded-xl bg-[var(--bg-base)] border border-[var(--border-color)] text-[var(--text-main)] mt-2 hover:bg-[var(--bg-panel-hover)]" onclick="closeAccountModal(true)" data-i18n="cancelBtn">Batal</button>
-        </div>
-    </div>
-
-    <div id="toast" class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-[var(--bg-panel)] border border-[var(--accent-gold)] text-[var(--text-main)] px-4 py-2 rounded-full shadow-lg z-50 transition-all duration-300 opacity-0 pointer-events-none translate-y-[-20px]">
-        Pesan
+    <div id="loading" class="loader flex-col gap-4">
+        <div class="spinner"></div>
+        <p class="font-medium">Menganalisis Bahasa...</p>
     </div>
 
     <script>
-        // =========================================================================
-        // KONFIGURASI GEMINI API (CANVAS NATIVE)
-        // =========================================================================
-        const apiKey = "AIzaSyDAPFD_Yjpvxy0WaA-DTiCRyPCphnFZ4Qo"; 
-        // HANYA model ini yang didukung di lingkungan preview Canvas. Model lain akan 404.
-       const modelName = "gemini-1.5-flash-latest";
-        // =========================================================================
-
-        const accounts = [
-            { id: "user_001", name: "Pelajar Bahasa", level: "JLPT N4", icon: "ph-student" },
-            { id: "user_002", name: "Yamada Sensei", level: "Native / Guru", icon: "ph-chalkboard-teacher" },
-            { id: "user_003", name: "Pemula (Guest)", level: "Basic / Hiragana", icon: "ph-ghost" }
-        ];
-
-        const translations = {
-            id: { appTitle1: "Koreksi", appTitle2: "Sakubun", startPractice: "Mulai Latihan!", uploadDesc: "Unggah foto tulisan tanganmu atau ketik langsung untuk dikoreksi AI secara menyeluruh.", scanBtn: "Scan / Unggah Foto", formatDesc: "Format JPG, PNG, WEBP (Maks 5MB)", placeholder: "Ketik sakubun Anda di sini... (Coba: 私わ昨日学向へ行きました。友達と昼ご飯を食ました)", correctBtn: "Koreksi Sekarang", resultTitle: "Hasil Koreksi", summary: "Ringkasan", origText: "Teks Asli (Error)", corrText: "Hasil Perbaikan", errDetail: "Detail Kesalahan", noError: "Hebat! Tidak ada kesalahan yang ditemukan.", historyTab: "Riwayat", noHistory: "Belum ada riwayat koreksi.", progressTab: "Progres", avgScore: "Skor Rata-rata", thisMonth: "Bulan Ini", last3Months: "3 Bulan Terakhir", totalSakubun: "Total Sakubun", streak: "Hari Beruntun", profileTab: "Profil", switchAccount: "Ganti", darkMode: "Mode Gelap", uiLang: "Bahasa UI", clearHistory: "Hapus Semua Riwayat", analyzing: "AI Sedang Menganalisis...", switchAccountTitle: "Pilih Akun", cancelBtn: "Batal", homeTab: "Beranda", langName: "bahasa Indonesia", typeGrammar: "Tata Bahasa", typeKanji: "Kanji", typeVocab: "Kosakata", typePunct: "Tanda Baca" },
-            en: { appTitle1: "Sakubun", appTitle2: "Correction", startPractice: "Start Practicing!", uploadDesc: "Upload a photo of your handwriting or type directly for comprehensive AI correction.", scanBtn: "Scan / Upload Photo", formatDesc: "Format JPG, PNG, WEBP (Max 5MB)", placeholder: "Type your sakubun here...", correctBtn: "Correct Now", resultTitle: "Correction Result", summary: "Summary", origText: "Original (Errors)", corrText: "Corrected Version", errDetail: "Error Details", noError: "Great job! No errors found.", historyTab: "History", noHistory: "No correction history yet.", progressTab: "Progress", avgScore: "Average Score", thisMonth: "This Month", last3Months: "Last 3 Months", totalSakubun: "Total Sakubun", streak: "Day Streak", profileTab: "Profile", switchAccount: "Switch", darkMode: "Dark Mode", uiLang: "UI Language", clearHistory: "Clear All History", analyzing: "AI is Analyzing...", switchAccountTitle: "Select Account", cancelBtn: "Cancel", homeTab: "Home", langName: "English", typeGrammar: "Grammar", typeKanji: "Kanji", typeVocab: "Vocabulary", typePunct: "Punctuation" },
-            ja: { appTitle1: "作文", appTitle2: "添削", startPractice: "練習開始！", uploadDesc: "手書きの写真をアップロードするか、直接入力してAIに徹底的に添削してもらいます。", scanBtn: "スキャン/画像アップロード", formatDesc: "JPG, PNG形式 (最大 5MB)", placeholder: "ここに作文を入力してください...", correctBtn: "今すぐ添削", resultTitle: "添削結果", summary: "まとめ", origText: "原文（エラー箇所）", corrText: "修正後", errDetail: "エラーの詳細", noError: "素晴らしい！エラーは見つかりませんでした。", historyTab: "履歴", noHistory: "添削履歴はまだありません。", progressTab: "進捗", avgScore: "平均スコア", thisMonth: "今月", last3Months: "過去3ヶ月", totalSakubun: "総作文数", streak: "連続日数", profileTab: "プロフィール", switchAccount: "切替", darkMode: "ダークモード", uiLang: "言語設定", clearHistory: "履歴をすべて削除", analyzing: "AIが分析中...", switchAccountTitle: "アカウント選択", cancelBtn: "キャンセル", homeTab: "ホーム", langName: "日本語", typeGrammar: "文法", typeKanji: "漢字", typeVocab: "語彙", typePunct: "句読点" },
-            zh: { appTitle1: "作文", appTitle2: "批改", startPractice: "开始练习！", uploadDesc: "上传手写照片或直接输入，让AI为您全面批改。", scanBtn: "扫描 / 上传照片", formatDesc: "JPG, PNG 格式 (最大 5MB)", placeholder: "在此处输入您的作文...", correctBtn: "立即批改", resultTitle: "批改结果", summary: "总结", origText: "原文 (错误)", corrText: "修改后版本", errDetail: "错误详情", noError: "太棒了！没有发现错误。", historyTab: "历史记录", noHistory: "暂无批改历史。", progressTab: "进度", avgScore: "平均分", thisMonth: "本月", last3Months: "过去三个月", totalSakubun: "作文总数", streak: "连续天数", profileTab: "个人资料", switchAccount: "切换", darkMode: "深色模式", uiLang: "界面语言", clearHistory: "清除所有历史记录", analyzing: "AI正在分析中...", switchAccountTitle: "选择账号", cancelBtn: "取消", homeTab: "首页", langName: "中文", typeGrammar: "语法", typeKanji: "汉字", typeVocab: "词汇", typePunct: "标点符号" },
-            ko: { appTitle1: "작문", appTitle2: "교정", startPractice: "연습 시작!", uploadDesc: "손글씨 사진을 업로드하거나 직접 입력하여 AI의 종합적인 교정을 받으세요.", scanBtn: "스캔 / 사진 업로드", formatDesc: "JPG, PNG 형식 (최대 5MB)", placeholder: "여기에 작문을 입력하세요...", correctBtn: "지금 교정하기", resultTitle: "교정 결과", summary: "요약", origText: "원본 (오류)", corrText: "수정된 버전", errDetail: "오류 세부 정보", noError: "훌륭합니다! 오류가 발견되지 않았습니다.", historyTab: "기록", noHistory: "아직 교정 기록이 없습니다.", progressTab: "진행 상황", avgScore: "평균 점수", thisMonth: "이번 달", last3Months: "지난 3개월", totalSakubun: "총 작문 수", streak: "연속 일수", profileTab: "프로필", switchAccount: "전환", darkMode: "다크 모드", uiLang: "언어 설정", clearHistory: "모든 기록 지우기", analyzing: "AI 분석 중...", switchAccountTitle: "계정 선택", cancelBtn: "취소", homeTab: "홈", langName: "한국어", typeGrammar: "문법", typeKanji: "한자", typeVocab: "어휘", typePunct: "구두점" }
-        };
-
-        let currentLang = 'id';
-        let currentAccount = accounts[0];
-        let currentImageBase64 = null;
-        let currentImageMimeType = "image/jpeg";
-        let correctionHistory = [];
-        let currentAnalysis = null;
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) toggleTheme(); 
-            const savedLang = localStorage.getItem('sakubun_lang');
-            if (savedLang) changeLanguage(savedLang);
-            const savedAccId = localStorage.getItem('sakubun_acc');
-            if (savedAccId) {
-                const acc = accounts.find(a => a.id === savedAccId);
-                if (acc) switchAccount(acc, true);
-            } else {
-                switchAccount(accounts[0], true);
-            }
-        });
-
-        function changeLanguage(langCode) {
-            if(!translations[langCode]) langCode = 'id';
-            currentLang = langCode;
-            document.getElementById('lang-select').value = langCode;
-            localStorage.setItem('sakubun_lang', langCode);
-            
-            const t = translations[langCode];
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (t[key]) {
-                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = t[key];
-                    else el.innerText = t[key];
-                }
-            });
-            if (currentAnalysis) renderCorrectionDetail(currentAnalysis);
-        }
-
-        function switchAccount(accountObj, isInit = false) {
-            currentAccount = accountObj;
-            localStorage.setItem('sakubun_acc', accountObj.id);
-            document.getElementById('curr-account-name').innerText = accountObj.name;
-            document.getElementById('curr-account-level').innerText = accountObj.level;
-            document.getElementById('curr-account-avatar').className = `ph ${accountObj.icon}`;
-
-            const savedHistory = localStorage.getItem('sakubun_history_' + accountObj.id);
-            correctionHistory = savedHistory ? JSON.parse(savedHistory) : [];
-            
-            renderHistory();
-            updateProgressData();
-
-            if (!isInit) {
-                showToast(`Akun dialihkan ke: ${accountObj.name}`);
-                switchScreen('home', document.querySelector('.nav-item'));
-            }
-        }
-
-        function openAccountModal() {
-            const list = document.getElementById('account-list');
-            list.innerHTML = '';
-            accounts.forEach(acc => {
-                const isActive = acc.id === currentAccount.id;
-                const div = document.createElement('div');
-                div.className = `p-3 rounded-xl border flex items-center gap-3 cursor-pointer transition ${isActive ? 'bg-[var(--accent-gold-light)] border-[var(--accent-gold)]' : 'bg-[var(--bg-panel)] border-[var(--border-color)] hover:border-[var(--accent-gold)]'}`;
-                div.onclick = () => { switchAccount(acc); closeAccountModal(true); };
-                div.innerHTML = `
-                    <div class="w-10 h-10 rounded-full bg-[var(--bg-base)] flex items-center justify-center text-xl text-[var(--accent-gold)]"><i class="ph ${acc.icon}"></i></div>
-                    <div class="flex-1"><h4 class="font-bold text-[var(--text-main)]">${acc.name}</h4><p class="text-xs text-[var(--text-muted)]">${acc.level}</p></div>
-                    ${isActive ? '<i class="ph ph-check-circle text-2xl text-[var(--accent-gold)]"></i>' : ''}
-                `;
-                list.appendChild(div);
-            });
-            document.getElementById('account-modal').classList.add('active');
-        }
-
-        function closeAccountModal(force = false) {
-            if(force || event.target === document.getElementById('account-modal')) document.getElementById('account-modal').classList.remove('active');
-        }
-
-        document.getElementById('text-input').addEventListener('input', function(e) {
-            document.getElementById('char-count').innerText = `${e.target.value.length}/1000`;
-        });
-
-        function switchScreen(screenId, navElement = null) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(`screen-${screenId}`).classList.add('active');
-            
-            if (navElement) {
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                navElement.classList.add('active');
-            } else {
-                const icons = { 'home': 0, 'detail': 0, 'history': 1, 'progress': 2, 'profile': 3 };
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                document.querySelectorAll('.nav-item')[icons[screenId]].classList.add('active');
-            }
-            if (screenId === 'history') renderHistory();
-            window.scrollTo(0,0);
-        }
+        const API_KEY = "AIzaSyDAPFD_Yjpvxy0WaA-DTiCRyPCphnFZ4Qo";
+        const MODEL_NAME = "gemini-1.5-flash-latest"; // Menggunakan endpoint stabil
 
         function toggleTheme() {
             const body = document.body;
-            const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            body.setAttribute('data-theme', newTheme);
-            const icon = document.getElementById('theme-icon');
-            if(newTheme === 'dark') {
-                icon.classList.replace('ph-sun', 'ph-moon');
-                document.getElementById('theme-toggle-switch').checked = true;
-            } else {
-                icon.classList.replace('ph-moon', 'ph-sun');
-                document.getElementById('theme-toggle-switch').checked = false;
-            }
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('theme-icon').className = isDark ? 'ph ph-sun' : 'ph ph-moon';
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.style.opacity = '1';
-            toast.style.transform = 'translate(-50%, 0)';
-            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translate(-50%, -20px)'; }, 4000);
+        function showHome() {
+            document.getElementById('home-screen').classList.remove('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
         }
 
-        function handleImageSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            if (file.size > 5 * 1024 * 1024) return showToast("Ukuran file terlalu besar (Maks 5MB)");
+        async function runKoreksi() {
+            const text = document.getElementById('input-text').value;
+            if(!text) return;
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentImageBase64 = e.target.result.split(',')[1]; 
-                currentImageMimeType = file.type || "image/jpeg"; 
-                document.getElementById('image-preview').src = e.target.result;
-                document.getElementById('image-preview-container').style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
+            document.getElementById('loading').style.display = 'flex';
 
-        function removeImage() {
-            currentImageBase64 = null;
-            document.getElementById('file-input').value = '';
-            document.getElementById('image-preview-container').style.display = 'none';
-            document.getElementById('image-preview').src = '';
-        }
-
-        // --- SISTEM API YANG DIRANCANG ULANG TOTAL ---
-        async function processCorrection() {
-            const textInput = document.getElementById('text-input').value.trim();
+            // Endpoint v1 yang sudah diperbaiki
+            const url = `https://generativelanguage.googleapis.com/v1/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
             
-            if (!textInput && !currentImageBase64) {
-                return showToast("Silakan ketik teks atau unggah foto sakubun terlebih dahulu!");
-            }
-
-            document.getElementById('api-error-alert').style.display = 'none';
-            document.getElementById('loader').style.display = 'flex';
-            const tLang = translations[currentLang].langName || "bahasa Indonesia";
-
-            const systemInstruction = `Kamu adalah seorang Dosen Native Jepang yang SANGAT TELITI, KETAT, dan PERFEKSIONIS.
-Tugasmu adalah mengoreksi Sakubun.
-Kamu TIDAK BOLEH hanya mengecek Grammar. Kamu WAJIB memeriksa 4 hal ini secara mendetail:
-1. "kanji": Periksa apakah ada kanji yang salah tulis (misal 学向 harusnya 学校), salah okurigana, atau kata hiragana yang wajibnya ditulis pakai kanji umum.
-2. "vocab": Periksa apakah ada kata yang kaku/salah konteks (misal 食ました harusnya 食べました).
-3. "punct": Periksa tanda baca. JIKA KALIMAT TIDAK DIAKHIRI TITIK (。), INI ADALAH KESALAHAN FATAL. WAJIB tambahkan titik.
-4. "grammar": Periksa partikel (わ -> は) dan konjugasi kata kerja.
-
-Berikan output MURNI hanya dalam format JSON. 
-Gabungan properti "text" dari segments HARUS 100% sama persis dengan input asli.`;
-
-            let parts = [];
-            
-            if (currentImageBase64) {
-                parts.push({ "inlineData": { "mimeType": currentImageMimeType, "data": currentImageBase64 } });
-                let promptMsg = "Baca teks Jepang di gambar ini dengan SANGAT TELITI.";
-                if (textInput) promptMsg += ` Konteks tambahan pengguna: ${textInput}`;
-                promptMsg += " Temukan SEMUA kesalahan kanji, vocab, grammar, dan punct (pastikan titik di akhir kalimat!). Keluarkan hanya JSON.";
-                parts.push({ "text": promptMsg });
-            } else {
-                parts.push({ "text": `Koreksi seluruh teks ini tanpa ampun:\n\n${textInput}` });
-            }
-
-            const payload = {
-                "systemInstruction": { "parts": [{ "text": systemInstruction }] },
-                "contents": [{ "parts": parts }],
-                "generationConfig": { 
-                    "responseMimeType": "application/json",
-                    "responseSchema": {
-                        "type": "OBJECT",
-                        "properties": {
-                            "score": { "type": "INTEGER" },
-                            "summary": { "type": "STRING" },
-                            "correctedFullText": { "type": "STRING" },
-                            "segments": {
-                                "type": "ARRAY",
-                                "items": {
-                                    "type": "OBJECT",
-                                    "properties": {
-                                        "text": { "type": "STRING" },
-                                        "isError": { "type": "BOOLEAN" },
-                                        "type": { "type": "STRING", "description": "Isi dengan: grammar, kanji, vocab, atau punct" },
-                                        "correction": { "type": "STRING" },
-                                        "explanation": { "type": "STRING" }
-                                    },
-                                    "required": ["text", "isError"]
-                                }
-                            }
-                        },
-                        "required": ["score", "summary", "correctedFullText", "segments"]
-                    }
-                }
-            };
-
-            const url = [https://generativelanguage.googleapis.com/v1/models/$](https://generativelanguage.googleapis.com/v1/models/$){modelName}:generateContent?key=${apiKey};
+            const prompt = `Bertindaklah sebagai guru bahasa Jepang. Koreksi kalimat ini: "${text}". 
+            Berikan hasil akhir yang benar saja di baris pertama, lalu berikan penjelasan singkat poin-poin kesalahannya (jika ada) dalam bahasa Indonesia.`;
 
             try {
-                const response = await fetchWithRetry(url, {
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
 
                 const data = await response.json();
+                if (data.error) throw new Error(data.error.message);
+
+                const fullResult = data.candidates[0].content.parts[0].text;
+                const lines = fullResult.split('\n');
                 
-                if (!response.ok || data.error) {
-                    throw new Error(data.error?.message || `Error API HTTP ${response.status}`);
-                }
-
-                let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (!rawText) throw new Error("Format respons kosong dari AI.");
-
-                const analysisResult = JSON.parse(rawText);
+                // Menampilkan baris pertama sebagai hasil koreksi teks
+                document.getElementById('text-output').innerText = lines[0];
                 
-                let finalOriginalInput = textInput;
-                if (!finalOriginalInput && currentImageBase64) {
-                    finalOriginalInput = analysisResult.segments.map(s => s.text).join("");
-                }
-
-                handleAnalysisSuccess(analysisResult, finalOriginalInput);
-
-            } catch (error) {
-                console.error("Detail Kesalahan:", error);
-                document.getElementById('api-error-alert').style.display = 'block';
-                document.getElementById('api-error-text').innerText = error.message;
-                window.scrollTo(0,0);
-            } finally {
-                document.getElementById('loader').style.display = 'none';
-            }
-        }
-
-        async function fetchWithRetry(url, options, maxRetries = 5) {
-            const delays = [1000, 2000, 4000, 8000, 16000];
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const res = await fetch(url, options);
-                    if (!res.ok) {
-                        const errorData = await res.json().catch(() => ({}));
-                        throw new Error(errorData.error?.message || `Status HTTP ${res.status}`);
-                    }
-                    return res;
-                } catch (err) {
-                    if (i === maxRetries - 1) throw err; 
-                    await new Promise(r => setTimeout(r, delays[i]));
-                }
-            }
-        }
-
-        // --- MENGURUS UI DAN RENDERING HASIL ---
-        function handleAnalysisSuccess(data, originalInput) {
-            data.id = Date.now().toString();
-            data.timestamp = new Date().toLocaleString(currentLang === 'id' ? 'id-ID' : 'en-US', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
-            data.originalInput = originalInput;
-            
-            data.errors = data.segments.filter(s => s.isError);
-
-            currentAnalysis = data;
-            
-            correctionHistory.unshift(data);
-            if(correctionHistory.length > 30) correctionHistory.pop();
-            localStorage.setItem('sakubun_history_' + currentAccount.id, JSON.stringify(correctionHistory));
-
-            renderCorrectionDetail(data);
-            updateProgressData();
-            switchScreen('detail');
-            
-            document.getElementById('text-input').value = '';
-            removeImage(); 
-        }
-
-        function renderCorrectionDetail(data) {
-            document.getElementById('detail-score').innerText = data.score;
-            document.getElementById('score-circle').setAttribute('stroke-dasharray', `${data.score}, 100`);
-            
-            const circle = document.getElementById('score-circle');
-            if(data.score >= 90) circle.style.color = '#4dff4d'; 
-            else if(data.score >= 70) circle.style.color = 'var(--accent-gold)';
-            else circle.style.color = '#ff6666'; 
-            
-            document.getElementById('detail-summary').innerText = data.summary;
-            document.getElementById('error-count-badge').innerText = `${data.errors.length}`;
-
-            const textDisplayOrig = document.getElementById('text-display-orig');
-            const errorsContainer = document.getElementById('errors-container');
-            const noErrorMsg = document.getElementById('no-error-msg');
-            
-            textDisplayOrig.innerHTML = ''; errorsContainer.innerHTML = '';
-
-            if (data.errors.length === 0) {
-                textDisplayOrig.innerText = data.correctedFullText;
-                errorsContainer.style.display = 'none';
-                noErrorMsg.style.display = 'block';
-            } else {
-                errorsContainer.style.display = 'block';
-                noErrorMsg.style.display = 'none';
-                
-                let errorIndex = 0;
-                const t = translations[currentLang];
-
-                data.segments.forEach((seg) => {
-                    if (seg.isError) {
-                        const span = document.createElement('span');
-                        let safeType = seg.type ? seg.type.toLowerCase().trim() : 'grammar';
-                        if (!['grammar', 'kanji', 'vocab', 'punct'].includes(safeType)) {
-                            safeType = 'grammar';
-                        }
-
-                        span.className = `err-span et-${safeType}`; 
-                        span.innerText = seg.text || '[ ]';
-                        span.dataset.errId = errorIndex;
-                        span.onclick = () => highlightError(span.dataset.errId);
-                        textDisplayOrig.appendChild(span);
-
-                        const typeLabels = {
-                            'grammar': { label: t.typeGrammar, class: 'badge-grammar', icon: 'ph-text-aa' },
-                            'kanji': { label: t.typeKanji, class: 'badge-kanji', icon: 'ph-translate' },
-                            'vocab': { label: t.typeVocab, class: 'badge-vocab', icon: 'ph-book-open-text' },
-                            'punct': { label: t.typePunct, class: 'badge-punct', icon: 'ph-quotes' }
-                        };
-                        
-                        const tInfo = typeLabels[safeType] || typeLabels['grammar'];
-
-                        const errDiv = document.createElement('div');
-                        errDiv.className = 'err-list-item';
-                        errDiv.id = `err-item-${errorIndex}`;
-                        errDiv.onclick = () => highlightError(errDiv.id.split('-')[2]);
-                        
-                        errDiv.innerHTML = `
-                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--bg-base)] flex items-center justify-center text-[var(--text-muted)] border border-[var(--border-color)]">
-                                ${errorIndex + 1}
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-start mb-1">
-                                    <span class="err-badge ${tInfo.class}"><i class="ph ${tInfo.icon} mr-1"></i>${tInfo.label}</span>
-                                </div>
-                                <div class="flex items-center gap-2 mb-2 font-serif text-lg">
-                                    <span class="line-through text-[var(--text-muted)]">${seg.text || '[Kosong]'}</span>
-                                    <i class="ph ph-arrow-right text-[var(--text-muted)] text-sm"></i>
-                                    <span class="text-[var(--accent-gold)] font-bold">${seg.correction}</span>
-                                </div>
-                                <p class="text-sm text-[var(--text-muted)]">${seg.explanation}</p>
-                            </div>
-                        `;
-                        errorsContainer.appendChild(errDiv);
-                        errorIndex++;
-                    } else {
-                        textDisplayOrig.appendChild(document.createTextNode(seg.text));
-                    }
-                });
-            }
-
-            document.getElementById('text-display-corr').innerText = data.correctedFullText;
-            toggleTextView('orig');
-        }
-
-        function toggleTextView(view) {
-            const origTab = document.getElementById('tab-orig'), corrTab = document.getElementById('tab-corr');
-            const origText = document.getElementById('text-display-orig'), corrText = document.getElementById('text-display-corr');
-
-            if (view === 'orig') {
-                origTab.className = "flex-1 py-2 text-sm font-semibold rounded-md bg-[var(--bg-base)] shadow-sm text-[var(--text-main)] transition";
-                corrTab.className = "flex-1 py-2 text-sm font-semibold rounded-md text-[var(--text-muted)] transition";
-                origText.classList.remove('hidden'); corrText.classList.add('hidden');
-            } else {
-                corrTab.className = "flex-1 py-2 text-sm font-semibold rounded-md bg-[var(--bg-base)] shadow-sm text-[var(--accent-gold)] transition";
-                origTab.className = "flex-1 py-2 text-sm font-semibold rounded-md text-[var(--text-muted)] transition";
-                origText.classList.add('hidden'); corrText.classList.remove('hidden');
-            }
-        }
-
-        function highlightError(index) {
-            document.querySelectorAll('.err-span').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.err-list-item').forEach(el => el.classList.remove('active'));
-            toggleTextView('orig');
-
-            const span = document.querySelector(`.err-span[data-err-id="${index}"]`);
-            const item = document.getElementById(`err-item-${index}`);
-            
-            if (span && item) {
-                span.classList.add('active'); item.classList.add('active');
-                span.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
-
-        function renderHistory() {
-            const container = document.getElementById('history-container');
-            const emptyState = document.getElementById('empty-history');
-            
-            container.innerHTML = '';
-            if (correctionHistory.length === 0) {
-                emptyState.style.display = 'block';
-                return;
-            }
-            
-            emptyState.style.display = 'none';
-            correctionHistory.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'panel p-4 flex justify-between items-center cursor-pointer hover:border-[var(--accent-gold)] transition';
-                div.onclick = () => { renderCorrectionDetail(item); switchScreen('detail'); };
-
-                let previewText = item.originalInput;
-                if(previewText.length > 30) previewText = previewText.substring(0, 30) + '...';
-
-                div.innerHTML = `
-                    <div class="flex-1 overflow-hidden pr-4">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="text-xs text-[var(--text-muted)]"><i class="ph ph-calendar-blank"></i> ${item.timestamp}</span>
-                            ${item.errors.length === 0 ? '<span class="text-[10px] bg-green-500/20 text-green-500 px-1 rounded border border-green-500/30">Sempurna</span>' : ''}
-                        </div>
-                        <p class="font-serif text-[var(--text-main)] truncate">${previewText}</p>
-                    </div>
-                    <div class="flex flex-col items-center flex-shrink-0">
-                        <span class="text-lg font-bold ${item.score >= 80 ? 'text-[var(--accent-gold)]' : 'text-[var(--text-muted)]'}">${item.score}</span>
-                        <span class="text-[10px] text-[var(--text-muted)]">Skor</span>
+                // Menampilkan sisanya sebagai penjelasan
+                const explanation = lines.slice(1).join('<br>');
+                document.getElementById('explanation-box').innerHTML = `
+                    <div class="panel p-4 text-sm leading-relaxed">
+                        <h4 class="font-bold mb-2 flex items-center gap-2">
+                            <i class="ph ph-info text-[var(--accent)]"></i> Penjelasan Guru:
+                        </h4>
+                        ${explanation || "Kalimat sudah bagus dan benar!"}
                     </div>
                 `;
-                container.appendChild(div);
-            });
-        }
 
-        function updateProgressData() {
-            const total = correctionHistory.length;
-            document.getElementById('prog-total').innerText = total;
-            
-            if (total === 0) {
-                document.getElementById('prog-avg-score').innerText = '0.0';
-                return;
-            }
-
-            const sum = correctionHistory.reduce((acc, curr) => acc + curr.score, 0);
-            const avg = (sum / total).toFixed(1);
-            document.getElementById('prog-avg-score').innerText = avg;
-        }
-
-        function clearHistory() {
-            if(confirm("Apakah Anda yakin ingin menghapus semua riwayat koreksi untuk akun ini?")) {
-                correctionHistory = [];
-                localStorage.removeItem('sakubun_history_' + currentAccount.id);
-                renderHistory();
-                updateProgressData();
-                showToast("Riwayat berhasil dihapus");
+                document.getElementById('home-screen').classList.add('hidden');
+                document.getElementById('result-screen').classList.remove('hidden');
+            } catch (err) {
+                alert("Terjadi kesalahan: " + err.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
             }
         }
-
     </script>
 </body>
 </html>
